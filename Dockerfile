@@ -15,6 +15,6 @@ FROM alpine:latest AS production
 COPY --from=builder /go-app .
 ## we can then kick off our newly compiled
 ## binary exectuable!!
-EXPOSE 8080
+EXPOSE 9001
 
 CMD [ "/go-app" ]
