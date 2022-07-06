@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	// "github.com/rs/cors"
@@ -30,7 +31,12 @@ func initializeRouter() {
 
 	log.Println("Starting server on port 9001")
 
-	log.Fatal(http.ListenAndServe(":9001", r))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9001"
+	}
+
+	log.Fatal(http.ListenAndServe(":" + port, r))
 }
 
 func main() {
