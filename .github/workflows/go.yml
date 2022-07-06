@@ -1,0 +1,46 @@
+name: Go
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker login
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}   
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          
+      - name: heroku login
+        env: 
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:login
+          
+      # Runs a set of commands using the runners shell
+      - name: docker build cnn
+        run: |
+          docker build . -t avik6028/neutral-backend:1.0.0
+
+      - name: docker push
+        run: |
+          docker push avik6028/neutral-backend:1.0.0
+
+      - name: Build and push heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web 
+
+      - name: Release heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web

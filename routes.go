@@ -45,6 +45,7 @@ type Service struct {
 }
 
 var clientSet *kubernetes.Clientset = nil
+var namespace string = "default"
 
 func downloadConfig(user string, configURL string, configName string, uploadPath string) error {
 	fmt.Println("Downloading config from: ", configURL)
@@ -90,7 +91,7 @@ func testCluster(configAbsLoc string) error {
 		return err
 	}
 
-	pods, err := clientSet.CoreV1().Pods("lucifergene").List(context.Background(), metav1.ListOptions{})
+	pods, err := clientSet.CoreV1().Pods(namespace).List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		return err
 	}
@@ -177,7 +178,7 @@ func getDeployments() ([]Deployment, error) {
 		return deploymentArray, fmt.Errorf("cluster not connected")
 	}
 
-	deployments, err := clientSet.AppsV1().Deployments("lucifergene").List(context.Background(), metav1.ListOptions{})
+	deployments, err := clientSet.AppsV1().Deployments(namespace).List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		return deploymentArray, err
 	}
@@ -223,7 +224,7 @@ func getServices() ([]Service, error) {
 		return serviceArray, fmt.Errorf("cluster not connected")
 	}
 
-	services, err := clientSet.CoreV1().Services("lucifergene").List(context.Background(), metav1.ListOptions{})
+	services, err := clientSet.CoreV1().Services(namespace).List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		return serviceArray, err
 	}
