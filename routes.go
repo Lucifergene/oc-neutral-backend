@@ -45,7 +45,7 @@ type Service struct {
 }
 
 var clientSet *kubernetes.Clientset = nil
-var namespace string = "default"
+var namespace string = "lucifergene"
 
 func downloadConfig(user string, configURL string, configName string, uploadPath string) error {
 	fmt.Println("Downloading config from: ", configURL)
